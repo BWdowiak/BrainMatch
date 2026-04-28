@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron text-center p-5 mb-5 shadow border-0" 
+     style="background-color: var(--card-bg) !important; border-radius: 20px; border-bottom: 5px solid var(--main-accent) !important; transition: all 0.3s ease;">
+    
+    <h1 class="display-3 fw-bold" style="color: var(--main-accent) !important;">WITAJ W BRAINMATCH!</h1>
+    <p class="lead fs-4 text-white">Znajdź idealnego korepetytora lub zacznij uczyć innych już dziś.</p>
+    <hr class="my-4" style="border-top: 2px solid #343a40; opacity: 0.3;">
+    
+    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+        <a class="btn btn-lg px-5 fw-bold text-white" href="{{ url_for('main.ads') }}" 
+           style="background-color: var(--main-accent) !important; color: var(--text-on-accent) !important; border-radius: 12px;">PRZEGLĄDAJ OGŁOSZENIA</a>
+        
+        {% if not current_user.is_authenticated %}
+            <a class="btn btn-outline-dark btn-lg px-5 fw-bold" href="{{ url_for('auth.register') }}" 
+               style="border-width: 2px; border-radius: 12px; color: var(--text-main) !important; border-color: var(--text-main) !important;">DOŁĄCZ DO NAS</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="container">
+    <div class="col-md-12 text-center mb-5">
+        <h2 class="fw-bold" style="color: var(--main-accent) !important; letter-spacing: 1px;">NAJNOWSZE OGŁOSZENIA</h2>
+    </div>
+
+    <div class="row">
+        {% for ad in ads %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow border-0 h-100" style="background-color: var(--card-bg) !important; border-radius: 20px; border: 2px solid #343a40 !important;">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge px-3 py-2 fs-6" style="background-color: var(--main-accent) !important; color: var(--text-on-accent) !important; border-radius: 10px;">{{ ad.subject | upper }}</span>
+                            <small class="fw-bold" style="color: var(--text-main) !important;">{{ ad.date_posted.strftime('%d.%m.%Y') }}</small>
+                        </div>
+
+                        <h3 class="card-title fw-bold" style="color: var(--main-accent) !important;">{{ ad.title }}</h3>
+                        <h4 class="fw-bold mb-3" style="color: #ffffff;">{{ ad.price }} PLN / GODZ.</h4>
+                        
+                        <p class="card-text fs-6 text-white mb-4" style="line-height: 1.5;">
+                            {{ ad.description[:120] }}{% if ad.description|length > 120 %}...{% endif %}
+                        </p>
+                        
+                        <div class="mt-auto">
+                            <hr style="border-top: 2px solid #343a40; opacity: 0.5;">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div style="color: var(--main-accent) !important; font-size: 0.9rem;">
+                                    <span class="fw-bold">AUTOR: </span>
+                                    {% if ad.author.first_name and ad.author.last_name %}
+                                        <span class="fw-bold text-white">{{ ad.author.first_name }} {{ ad.author.last_name }}</span>
+                                    {% else %}
+                                        <span class="fw-bold text-white">@{{ ad.author.username }}</span>
+                                    {% endif %}
+                                </div>
+                                <a href="{{ url_for('main.ads') }}" class="btn btn-sm fw-bold px-3" 
+                                   style="background-color: var(--main-accent) !important; color: var(--text-on-accent) !important; border-radius: 8px;">ZOBACZ</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="alert text-center fw-bold shadow-sm" style="background-color: var(--card-bg); color: var(--main-accent); border-radius: 15px; border: 2px solid #343a40;">
+                    Obecnie nie ma żadnych ogłoszeń.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

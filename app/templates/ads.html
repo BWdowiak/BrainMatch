@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-5 fw-bold text-center accent-text" style="letter-spacing: 1px;">WSZYSTKIE OGŁOSZENIA</h2>
+
+<div class="card mb-5 shadow border-0" style="background-color: var(--card-bg); border-radius: 20px; border: 2px solid #343a40 !important;">
+    <div class="card-body p-4">
+        <form method="GET" action="{{ url_for('main.ads') }}" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-bold accent-text">SZUKAJ PRZEDMIOTU</label>
+                <select name="subject" class="form-select" style="border: 2px solid var(--main-accent) !important; background-color: var(--bg-color); color: var(--text-main);">
+                    <option value="Wszystkie" {% if current_subject == 'Wszystkie' %}selected{% endif %}>Wszystkie przedmioty</option>
+                    {% for s in subjects %}
+                        <option value="{{ s }}" {% if current_subject == s %}selected{% endif %}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label fw-bold accent-text">SORTUJ WEDŁUG</label>
+                <select name="sort" class="form-select" style="border: 2px solid var(--main-accent) !important; background-color: var(--bg-color); color: var(--text-main);">
+                    <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Najnowsze</option>
+                    <option value="oldest" {% if current_sort == 'oldest' %}selected{% endif %}>Najstarsze</option>
+                    <option value="price_low" {% if current_sort == 'price_low' %}selected{% endif %}>Cena: od najniższej</option>
+                    <option value="price_high" {% if current_sort == 'price_high' %}selected{% endif %}>Cena: od najwyższej</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <div class="d-grid">
+                    <button type="submit" class="btn fw-bold py-2" style="background-color: var(--main-accent); color: var(--text-on-accent); border-radius: 10px;">ZASTOSUJ FILTRY</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        {% for ad in ads %}
+            <div class="card mb-4 shadow border-0" style="background-color: var(--card-bg) !important; border-radius: 20px; border: 2px solid #343a40 !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge px-3 py-2 fs-6" style="background-color: var(--main-accent) !important; color: var(--text-on-accent) !important; border-radius: 10px;">{{ ad.subject | upper }}</span>
+                        <small class="fw-bold" style="color: var(--text-main) !important;">{{ ad.date_posted.strftime('%d.%m.%Y') }}</small>
+                    </div>
+                    
+
+                    <h3 class="card-title fw-bold accent-text">{{ ad.title }}</h3>
+                    <h4 class="fw-bold mb-3" style="color: #ffffff;">{{ ad.price }} PLN / GODZ.</h4>
+                    
+                    <p class="card-text fs-5 text-white" style="line-height: 1.6;">{{ ad.description[:250] }}{% if ad.description|length > 250 %}...{% endif %}</p>
+                    
+                    <hr style="border-top: 2px solid #343a40; opacity: 0.5;">
+
+                    <div class="d-flex align-items-center justify-content-between">
+                        
+                        <div>
+                            <span class="form-label fw-bold" style="color: #0b3d91;">DODANE PRZEZ: </span>
+                            <a href="{{ url_for('main.view_profile', username=ad.author.username) }}" class="text-decoration-none fw-bold fs-5 text-white profile-link">
+                                {% if ad.author.first_name and ad.author.last_name %}
+                                {{ ad.author.first_name }} {{ ad.author.last_name }}
+                                {% else %}
+                                 @{{ ad.author.username }}
+                                {% endif %}
+                            </a>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('main.ad_details', ad_id=ad.id) }}" class="btn btn-sm fw-bold text-white px-3" 
+                               style="background-color: var(--main-accent); color: var(--text-on-accent) !important; border-radius: 8px;">SZCZEGÓŁY</a>
+
+                            {% if current_user.is_authenticated and (ad.author == current_user or current_user.is_admin) %}
+                                <div class="btn-group">
+                                    <a href="{{ url_for('main.update_ad', ad_id=ad.id) }}" class="btn btn-sm fw-bold text-white px-3" style="background-color: #343a40; border-radius: 8px 0 0 8px;">EDYTUJ</a>
+                                    <form action="{{ url_for('main.delete_ad', ad_id=ad.id) }}" method="POST" class="d-inline">
+                                        <input type="submit" class="btn btn-sm fw-bold text-white px-3" style="background-color: #910b0b; border-radius: 0 8px 8px 0;" value="USUŃ" onclick="return confirm('Na pewno chcesz usunąć to ogłoszenie?');">
+                                    </form>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert text-center fw-bold shadow-sm" style="background-color: var(--card-bg); color: var(--main-accent); border-radius: 15px; border: 2px solid #343a40;">
+                Nie znaleziono ogłoszeń spełniających wybrane kryteria.
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+
+    body.dark-mode .form-select {
+        background-color: #222 !important;
+        color: white !important;
+        border-color: var(--main-accent) !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffea00' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+    }
+    .profile-link:hover {
+        color: var(--main-accent) !important;
+        text-decoration: underline !important;
+    }
+</style>
+{% endblock %}

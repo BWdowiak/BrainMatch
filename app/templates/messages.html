@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="fw-bold accent-text text-center mb-5" style="letter-spacing: 1px;">TWOJE KONWERSACJE</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0" style="background-color: var(--card-bg); border-radius: 20px; border: 2px solid #343a40;">
+                <div class="card-body p-4">
+                    {% if users %}
+                        <div class="list-group list-group-flush">
+                            {% for user in users %}
+                                <a href="{{ url_for('main.chat_with', user_id=user.id) }}" 
+                                   class="list-group-item list-group-item-action border-0 mb-3 p-4 d-flex align-items-center justify-content-between" 
+                                   style="background-color: rgba(0,0,0,0.1); border-radius: 15px; transition: transform 0.2s ease;">
+                                    
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ url_for('static', filename='profile_pics/' + user.profile_pic) }}" 
+                                             class="rounded-circle me-4" style="width: 60px; height: 60px; object-fit: cover; border: 2px solid var(--main-accent);">
+                                        <div>
+                                            <h5 class="fw-bold text-white mb-0">
+                                                {% if user.first_name and user.last_name %}
+                                                    {{ user.first_name }} {{ user.last_name }}
+                                                {% else %}
+                                                    @{{ user.username }}
+                                                {% endif %}
+                                            </h5>
+                                            <p class="mb-0 small" style="color: var(--main-accent);">Kliknij, aby otworzyć czat</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <span class="badge rounded-pill" style="background-color: var(--main-accent); color: var(--text-on-accent);">ROZMOWA</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <h4 class="text-white-50">Nie masz jeszcze żadnych wiadomości.</h4>
+                            <a href="{{ url_for('main.ads') }}" class="btn mt-3 fw-bold" style="background-color: var(--main-accent); color: var(--text-on-accent);">Znajdź korepetytora</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .list-group-item-action:hover {
+        transform: scale(1.02);
+        background-color: rgba(0,0,0,0.2) !important;
+    }
+</style>
+{% endblock %}

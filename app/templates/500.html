@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="col-md-8 text-center">
+        <div class="card shadow-lg border-0 p-5" style="background-color: var(--card-bg); border-radius: 20px; border: 3px solid #910b0b !important;">
+            <div class="card-body">
+                <h1 class="fw-bold mb-0" style="font-size: 8rem; color: #910b0b; text-shadow: 2px 2px 10px rgba(0,0,0,0.2);">500</h1>
+                
+                <h2 class="fw-bold text-white mb-4">NASZ MÓZG SIĘ PRZEGRZAŁ...</h2>
+                
+                <p class="fs-4 text-white-50 mb-5">
+                    Coś poszło nie tak po naszej stronie. Nasze serwery właśnie intensywnie myślą nad rozwiązaniem tego problemu. Spróbuj odświeżyć stronę za chwilę!
+                </p>
+                
+                <a href="{{ url_for('main.home') }}" class="btn btn-lg fw-bold px-5 py-3 return-btn" 
+                   style="background-color: var(--main-accent); color: var(--text-on-accent); border-radius: 15px;">
+                    &larr; WRÓĆ W BEZPIECZNE MIEJSCE
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .return-btn {
+        transition: all 0.3s ease;
+    }
+    .return-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}

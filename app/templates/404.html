@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="col-md-8 text-center">
+        <div class="card shadow-lg border-0 p-5" style="background-color: var(--card-bg); border-radius: 20px; border: 3px solid var(--main-accent) !important;">
+            <div class="card-body">
+                <h1 class="fw-bold mb-0" style="font-size: 8rem; color: var(--main-accent); text-shadow: 2px 2px 10px rgba(0,0,0,0.2);">404</h1>
+                
+                <h2 class="fw-bold text-white mb-4">TA STRONA POSZŁA NA WAGARY!</h2>
+                
+                <p class="fs-4 text-white-50 mb-5">
+                    Szukaliśmy wszędzie, ale strony o tym adresie po prostu u nas nie ma. Mógł to być błąd w adresie, albo strona została przeniesiona.
+                </p>
+                
+                <a href="{{ url_for('main.home') }}" class="btn btn-lg fw-bold px-5 py-3 return-btn" 
+                   style="background-color: var(--main-accent); color: var(--text-on-accent); border-radius: 15px;">
+                    &larr; WRACAJMY DO NAUKI (STRONA GŁÓWNA)
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .return-btn {
+        transition: all 0.3s ease;
+    }
+    .return-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}

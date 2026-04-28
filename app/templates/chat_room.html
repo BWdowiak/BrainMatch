@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow border-0" style="background-color: var(--card-bg); border-radius: 20px; height: 75vh; display: flex; flex-direction: column; border: 2px solid #343a40;">
+            
+            <div class="card-header p-4 border-0" style="background-color: rgba(0,0,0,0.1); border-bottom: 2px solid var(--main-accent) !important;">
+                <h4 class="accent-text fw-bold mb-0">
+                    CZAT Z: 
+                    <a href="{{ url_for('main.view_profile', username=other_user.username) }}" class="text-decoration-none profile-chat-link">
+                        {% if other_user.first_name and other_user.last_name %}
+                            {{ other_user.first_name }} {{ other_user.last_name }}
+                        {% else %}
+                            @{{ other_user.username }}
+                        {% endif %}
+                    </a>
+                </h4>
+            </div>
+            
+            <div class="card-body p-4" style="overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; background-image: radial-gradient(var(--dot-color) 1px, transparent 1px); background-size: 20px 20px;">
+                {% for msg in messages %}
+                    <div class="mb-3 p-3 shadow-sm" style="max-width: 75%; border-radius: 15px; 
+                         {{ 'align-self: flex-end; background-color: var(--main-accent); color: var(--text-on-accent);' if msg.sender_id == current_user.id else 'align-self: flex-start; background-color: #343a40; color: white;' }}">
+                        
+                        <div class="body">{{ msg.body }}</div>
+                        <div class="text-end small opacity-50" style="font-size: 0.7rem; margin-top: 5px;">
+                            {{ msg.timestamp.strftime('%H:%M') }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center my-auto">
+                        <p class="text-white-50">Brak wcześniejszych wiadomości. Przywitaj się!</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="card-footer p-4 border-0 bg-transparent">
+                <form action="{{ url_for('main.send_message', recipient_id=other_user.id) }}" method="POST" class="d-flex gap-2">
+                    <input type="text" name="message_body" class="form-control form-control-lg" 
+                           placeholder="Wpisz wiadomość..." required 
+                           style="border-radius: 12px; border: 2px solid var(--main-accent); background-color: var(--bg-color); color: var(--text-main);">
+                    <button type="submit" class="btn fw-bold px-4" 
+                            style="background-color: var(--main-accent); color: var(--text-on-accent); border-radius: 12px;">
+                        WYŚLIJ
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('main.messages') }}" class="text-decoration-none fw-bold" style="color: var(--main-accent);">
+                &larr; POWRÓT DO WSZYSTKICH KONWERSACJI
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-chat-link {
+        color: var(--main-accent) !important;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    .profile-chat-link:hover {
+        filter: brightness(1.2);
+        text-decoration: underline !important;
+    }
+
+    /* Styl scrollbara */
+    .card-body::-webkit-scrollbar {
+        width: 8px;
+    }
+    .card-body::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .card-body::-webkit-scrollbar-thumb {
+        background: var(--main-accent);
+        border-radius: 10px;
+    }
+</style>
+
+<script>
+    const chatBody = document.querySelector('.card-body');
+    chatBody.scrollTop = chatBody.scrollHeight;
+</script>
+{% endblock %}

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if title %}{{ title }} - Brainmatch{% else %}Brainmatch - Znajdź korepetytora{% endif %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #fcfcfc;
+            --dot-color: #d1d5db;
+            --main-accent: #0b3d91; 
+            --navbar-bg: #7a858f;
+            --card-bg: #7a858f;
+            --text-on-accent: #ffffff;
+            --text-main: #343a40;
+            --logo-color: #0b3d91;
+            --form-label: #0b3d91;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;      
+            --dot-color: #333333;      
+            --main-accent: #ffea00;    
+            --navbar-bg: #1a1a1a;      
+            --card-bg: #2c2c2c;        
+            --text-on-accent: #000000; 
+            --text-main: #fcfcfc;      
+            --logo-color: #ffea00;     
+            --form-label: #ffea00;    
+        }
+
+        body {
+            background-color: var(--bg-color) !important;
+            background-image: radial-gradient(var(--dot-color) 3px, transparent 3px) !important;
+            background-size: 24px 24px !important;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-top: 110px;
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar-custom {
+            background-color: var(--navbar-bg) !important; 
+            border-bottom: 3px solid var(--main-accent); 
+            padding: 0 !important; 
+            min-height: 110px; 
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1030;
+            transition: all 0.3s ease;
+        }
+
+        .brainmatch-logo {
+            color: var(--logo-color) !important; 
+            font-size: 2.75rem;         
+            font-weight: 900;          
+            letter-spacing: 1px;       
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            height: 110px; 
+            transition: color 0.3s ease;
+        }
+
+
+        @media (min-width: 992px) {
+            .navbar-container-custom {
+                display: flex;
+                width: 100%;
+                height: 110px;
+            }
+            .nav-left, .nav-right {
+                flex: 1;
+                display: flex;
+                align-items: flex-end; 
+            }
+            .nav-left { justify-content: flex-end; }
+            .nav-right { justify-content: flex-start; }
+            .nav-center {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 30px;
+            }
+        }
+
+        .navbar-custom .nav-link {
+            color: var(--main-accent) !important; 
+            font-weight: 700;          
+            font-size: 1.3rem; 
+            margin: 0 6px; 
+            padding-top: 25px !important;    
+            padding-bottom: 40px !important; 
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+            border-radius: 15px 15px 0 0; 
+            transition: all 0.3s ease; 
+        }
+
+        .navbar-custom .nav-link:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .navbar-custom .nav-link.active { 
+            background-color: var(--main-accent) !important; 
+            color: var(--text-on-accent) !important; 
+        }
+
+        .msg-icon-svg {
+            width: 32px;
+            height: 32px;
+            fill: currentColor;
+            transition: transform 0.2s ease;
+        }
+        .nav-link:hover .msg-icon-svg {
+            transform: translateY(-3px);
+        }
+
+
+        .theme-toggle-btn {
+            background: none;
+            border: 2px dashed var(--main-accent) !important; 
+            border-radius: 50%;
+            cursor: pointer;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: var(--main-accent);
+            margin-bottom: 28px !important; 
+            margin-left: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        body.dark-mode .theme-toggle-btn {
+            box-shadow: 0 0 15px var(--main-accent);
+            background-color: rgba(255, 234, 0, 0.1);
+        }
+
+        .theme-toggle-btn:hover {
+            transform: scale(1.1);
+            border-style: solid !important;
+        }
+
+        body.dark-mode .btn-primary, 
+        body.dark-mode .btn-confirm-logout,
+        body.dark-mode input[type="submit"] {
+            background-color: var(--main-accent) !important;
+            border-color: var(--main-accent) !important;
+            color: var(--text-on-accent) !important;
+        }
+
+        body.dark-mode .card {
+            background-color: var(--card-bg) !important;
+            color: white !important;
+        }
+
+        body.dark-mode .form-label, 
+        body.dark-mode h1, 
+        body.dark-mode h2, 
+        body.dark-mode h3 {
+            color: var(--main-accent) !important;
+        }
+
+        body.dark-mode .form-control {
+            background-color: #222 !important;
+            color: white !important;
+            border: 2px solid var(--main-accent) !important;
+        }
+
+        body.dark-mode .badge.bg-primary {
+            background-color: var(--main-accent) !important;
+            color: var(--text-on-accent) !important;
+        }
+
+        /* Modal */
+        .modal-content {
+            border-radius: 20px;
+            border: 3px solid var(--main-accent);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+        .modal-header {
+            background-color: var(--navbar-bg);
+            color: white;
+            border-bottom: 2px solid var(--main-accent);
+        }
+
+        @media (max-width: 991px) {
+            body { padding-top: 0; }
+            .navbar-custom { position: relative; min-height: auto; }
+            .navbar-container-custom { display: block; }
+            .brainmatch-logo { font-size: 2.25rem; justify-content: center; height: auto; padding: 15px 0; }
+            .navbar-custom .nav-link { padding: 10px !important; border-radius: 10px; text-align: center; margin-bottom: 5px; }
+            .theme-toggle-btn { margin: 10px auto !important; }
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <button class="navbar-toggler my-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <div class="navbar-container-custom">
+                    <div class="nav-left">
+                        <ul class="navbar-nav">
+                            {% if current_user.is_authenticated and current_user.role == 'teacher' %}
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.endpoint == 'main.new_ad' %}active{% endif %}" href="{{ url_for('main.new_ad') }}">DODAJ OGŁOSZENIE</a>
+                                </li>
+                            {% endif %}
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.endpoint == 'main.ads' %}active{% endif %}" href="{{ url_for('main.ads') }}">OGŁOSZENIA</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-center">
+                        <a class="brainmatch-logo" href="{{ url_for('main.home') }}">BrainMatch</a>
+                    </div>
+
+                    <div class="nav-right">
+                        <ul class="navbar-nav" style="align-items: flex-end;">
+                            {% if current_user.is_authenticated %}
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.endpoint == 'auth.account' %}active{% endif %}" href="{{ url_for('auth.account') }}">KONTO</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">WYLOGUJ</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.endpoint == 'main.messages' %}active{% endif %}" href="{{ url_for('main.messages') }}" title="Wiadomości">
+                                        <svg class="msg-icon-svg" viewBox="0 0 24 24">
+                                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                                        </svg>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.endpoint == 'auth.login' %}active{% endif %}" href="{{ url_for('auth.login') }}">LOGOWANIE</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.endpoint == 'auth.register' %}active{% endif %}" href="{{ url_for('auth.register') }}">REJESTRACJA</a>
+                                </li>
+                            {% endif %}
+                            <li class="nav-item">
+                                <button id="theme-toggle" class="theme-toggle-btn" title="Zmień tryb">💡</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% block fluid_content %}{% endblock %}
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+
+    <div class="modal fade" id="logoutModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">POTWIERDŹ WYLOGOWANIE</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-5">
+                    <p class="fs-4 fw-bold">CZY NA PEWNO CHCESZ SIĘ WYLOGOWAĆ?</p>
+                </div>
+                <div class="modal-footer justify-content-center border-0 pb-5">
+                    <button type="button" class="btn px-4 py-2 fw-bold" data-bs-dismiss="modal" style="background-color: #7a858f; color: white; border-radius: 10px;">ANULUJ</button>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-confirm-logout px-4 py-2">WYLOGUJ MNIE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        if (localStorage.getItem('dark-mode') === 'enabled') {
+            body.classList.add('dark-mode');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('dark-mode', 'enabled');
+            } else {
+                localStorage.setItem('dark-mode', 'disabled');
+            }
+        });
+    </script>
+</body>
+</html>

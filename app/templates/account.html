@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block fluid_content %}
+    <div class="position-relative" style="width: 100vw; height: 350px; background: url('{{ cover_pic }}') center/cover no-repeat; margin-top: -3px; z-index: 10;">
+        <div class="position-absolute bottom-0 start-0 w-100" style="height: 3px; background-color: var(--main-accent); transition: background-color 0.3s ease;"></div>
+        <div class="position-absolute top-50 start-50 translate-middle">
+            <img src="{{ profile_pic }}" class="rounded-circle shadow-lg" style="width: 200px; height: 200px; object-fit: cover; border: 6px solid #343a40;">
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="container mb-5" style="margin-top: 30px;">
+    <div class="text-center mb-5">
+        {% if current_user.first_name and current_user.last_name %}
+            <h1 class="fw-bold mb-0" style="color: var(--main-accent); font-size: 3.5rem; transition: color 0.3s ease;">{{ current_user.first_name }} {{ current_user.last_name }}</h1>
+            <p class="fs-4" style="color: #495057;">@{{ current_user.username }}</p>
+        {% else %}
+            <h1 class="fw-bold mb-0" style="color: var(--main-accent); font-size: 3.5rem; transition: color 0.3s ease;">{{ current_user.username | upper }}</h1>
+        {% endif %}
+        
+        <p class="badge fs-5 px-4 py-2 mt-2" style="border-radius: 20px; background-color: var(--main-accent) !important; color: var(--text-on-accent) !important;">
+            {{ 'NAUCZYCIEL' if current_user.role == 'teacher' else 'UCZEŃ' }}
+        </p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow border-0" style="background-color: var(--card-bg); border-radius: 20px; transition: background-color 0.3s ease;">
+                
+                <div class="card-header border-0 bg-transparent pt-4 px-5">
+                    <ul class="nav nav-tabs border-0" id="profileTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold py-3 px-4 border-0 text-white" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic" type="button" role="tab" 
+                                style="background-color: rgba(255,255,255,0.1); border-radius: 12px 12px 0 0; font-size: 1.1rem; margin-right: 5px;">
+                                DANE PODSTAWOWE
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold py-3 px-4 border-0 text-white" id="edu-tab" data-bs-toggle="tab" data-bs-target="#edu" type="button" role="tab"
+                                style="background-color: rgba(255,255,255,0.1); border-radius: 12px 12px 0 0; font-size: 1.1rem;">
+                                WYKSZTAŁCENIE
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body p-5 pt-4">
+                    <form method="POST" action="" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="tab-content" id="profileTabsContent">
+                            
+                            <div class="tab-pane fade show active" id="basic" role="tabpanel">
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold" style="color: var(--main-accent);">IMIĘ</label>
+                                        {{ form.first_name(class="form-control form-control-lg", style="border: 2px solid #343a40;") }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold" style="color: var(--main-accent);">NAZWISKO</label>
+                                        {{ form.last_name(class="form-control form-control-lg", style="border: 2px solid #343a40;") }}
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold" style="color: var(--main-accent);">NAZWA UŻYTKOWNIKA (@)</label>
+                                        {{ form.username(class="form-control form-control-lg", style="border: 2px solid #343a40;") }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold" style="color: var(--main-accent);">EMAIL</label>
+                                        {{ form.email(class="form-control form-control-lg", style="border: 2px solid #343a40;") }}
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold" style="color: var(--main-accent);">O MNIE (OPCJONALNIE)</label>
+                                    {{ form.bio(class="form-control", style="border: 2px solid #343a40;", rows="4") }}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-bold" style="color: var(--main-accent);">ZDJĘCIE PROFILOWE</label>
+                                        {{ form.profile_pic(class="form-control", style="border: 2px solid #343a40;") }}
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-bold" style="color: var(--main-accent);">ZDJĘCIE W TLE</label>
+                                        {{ form.cover_pic(class="form-control", style="border: 2px solid #343a40;") }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="edu" role="tabpanel">
+                                <div class="mb-4">
+                                    <h4 class="form-label fw-bold" style="color: var(--main-accent);">TWOJE WYKSZTAŁCENIE I CERTYFIKATY</h4>
+                                    <p class="text-white-50 mb-4">Pochwal się ukończonymi szkołami, kursami lub certyfikatami, które posiadasz.</p>
+                                    {{ form.education(class="form-control", style="border: 2px solid #343a40;", rows="10", placeholder="Np. Uniwersytet Warszawski - Filologia Angielska, Certyfikat C2 Proficiency...") }}
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="d-grid mt-5">
+                            {{ form.submit(class="btn fw-bold btn-lg py-3", style="background-color: var(--main-accent); color: var(--text-on-accent); border-radius: 12px; transition: all 0.3s ease;") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .nav-tabs .nav-link.active {
+        background-color: var(--main-accent) !important;
+        color: var(--text-on-accent) !important;
+        transition: all 0.3s ease;
+    }
+    .nav-tabs .nav-link:hover:not(.active) {
+        background-color: rgba(255,255,255,0.2) !important;
+    }
+</style>
+{% endblock %}

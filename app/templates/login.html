@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0" style="background-color: #7a858f; border-radius: 15px;">
+            <div class="card-body p-5">
+                <h2 class="card-title text-center mb-4 fw-bold" style="color: #0b3d91;">LOGOWANIE</h2>
+                
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-bold" style="color: #0b3d91;">{{ form.username_or_email.label.text }}</label>
+                        {% if form.username_or_email.errors %}
+                            {{ form.username_or_email(class="form-control is-invalid", style="border: 2px solid #343a40;") }}
+                            <div class="invalid-feedback text-white">
+                                {% for error in form.username_or_email.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.username_or_email(class="form-control", style="border: 2px solid #343a40;") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold" style="color: #0b3d91;">{{ form.password.label.text }}</label>
+                        {% if form.password.errors %}
+                            {{ form.password(class="form-control is-invalid", style="border: 2px solid #343a40;") }}
+                            <div class="invalid-feedback text-white">
+                                {% for error in form.password.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.password(class="form-control", style="border: 2px solid #343a40;") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid mt-5">
+                        {{ form.submit(class="btn fw-bold text-white py-2", style="background-color: #0b3d91; border-radius: 8px;") }}
+                    </div>
+                </form>
+                <div class="mt-4 text-center">
+                    <span style="color: var(--text-main) !important;">Nie masz konta?</span> 
+                    <a href="{{ url_for('auth.register') }}" class="form-label fw-bold" style="color: #0b3d91;"">Zarejestruj się</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

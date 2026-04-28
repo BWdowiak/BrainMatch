@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block fluid_content %}
+    <div class="position-relative" 
+         style="width: 100vw; height: 350px; background: url('{{ url_for('static', filename='cover_pics/' + user.cover_pic) }}') center/cover no-repeat; margin-top: -3px; z-index: 10;">
+        
+        <div class="position-absolute bottom-0 start-0 w-100" style="height: 3px; background-color: var(--main-accent); transition: background-color 0.3s ease;"></div>
+        
+        <div class="position-absolute top-50 start-50 translate-middle">
+            <img src="{{ url_for('static', filename='profile_pics/' + user.profile_pic) }}" 
+                 class="rounded-circle shadow-lg" 
+                 style="width: 200px; height: 200px; object-fit: cover; border: 6px solid #343a40;">
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="container mb-5" style="margin-top: 30px;">
+    <div class="text-center mb-5">
+        {% if user.first_name and user.last_name %}
+            <h1 class="fw-bold mb-0" style="color: var(--main-accent); font-size: 3.5rem; transition: color 0.3s ease;">{{ user.first_name }} {{ user.last_name }}</h1>
+            <p class="fs-4" style="color: #495057;">@{{ user.username }}</p>
+        {% else %}
+            <h1 class="fw-bold mb-0" style="color: var(--main-accent); font-size: 3.5rem; transition: color 0.3s ease;">{{ user.username | upper }}</h1>
+        {% endif %}
+        
+        <p class="badge fs-5 px-4 py-2 mt-2" style="border-radius: 20px; background-color: var(--main-accent) !important; color: var(--text-on-accent) !important;">
+            {{ 'NAUCZYCIEL' if user.role == 'teacher' else 'UCZEŃ' }}
+        </p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow border-0" style="background-color: var(--card-bg); border-radius: 20px; transition: background-color 0.3s ease;">
+                
+                <div class="card-header border-0 bg-transparent pt-4 px-5">
+                    <ul class="nav nav-tabs border-0" id="publicTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold py-3 px-4 border-0 text-white" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" 
+                                style="background-color: rgba(255,255,255,0.1); border-radius: 12px 12px 0 0; font-size: 1.1rem; margin-right: 5px;">
+                                O MNIE
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold py-3 px-4 border-0 text-white" id="public-edu-tab" data-bs-toggle="tab" data-bs-target="#public-edu" type="button" role="tab"
+                                style="background-color: rgba(255,255,255,0.1); border-radius: 12px 12px 0 0; font-size: 1.1rem; margin-right: 5px;">
+                                WYKSZTAŁCENIE
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold py-3 px-4 border-0 text-white" id="ads-tab" data-bs-toggle="tab" data-bs-target="#ads" type="button" role="tab"
+                                style="background-color: rgba(255,255,255,0.1); border-radius: 12px 12px 0 0; font-size: 1.1rem;">
+                                OGŁOSZENIA
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body p-5 pt-4">
+                    <div class="tab-content" id="publicTabsContent">
+                        
+                        <div class="tab-pane fade show active" id="info" role="tabpanel">
+                            <h4 class="fw-bold accent-text mb-3">BIOGRAM</h4>
+                            <p class="text-white fs-5" style="white-space: pre-line;">
+                                {% if user.bio %}{{ user.bio }}{% else %}Ten użytkownik jeszcze nic o sobie nie napisał.{% endif %}
+                            </p>
+                        </div>
+
+                        <div class="tab-pane fade" id="public-edu" role="tabpanel">
+                            <h4 class="fw-bold accent-text mb-3">WYKSZTAŁCENIE I DOŚWIADCZENIE</h4>
+                            <p class="text-white fs-5" style="white-space: pre-line;">
+                                {% if user.education %}{{ user.education }}{% else %}Brak informacji o wykształceniu.{% endif %}
+                            </p>
+                        </div>
+
+                        <div class="tab-pane fade" id="ads" role="tabpanel">
+                            <h4 class="fw-bold accent-text mb-4">AKTYWNE OGŁOSZENIA TEGO NAUCZYCIELA</h4>
+                            {% for ad in ads %}
+                                <div class="p-4 mb-3 shadow-sm" style="background-color: rgba(0,0,0,0.1); border-radius: 15px; border: 1px solid var(--main-accent);">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h5 class="fw-bold text-white mb-0">{{ ad.title }}</h5>
+                                        <span class="badge px-3 py-2" style="background-color: var(--main-accent); color: var(--text-on-accent) !important; border-radius: 8px;">
+                                            {{ ad.subject | upper }}
+                                        </span>
+                                    </div>
+                                    <p class="accent-text fw-bold mb-3">{{ ad.price }} PLN / GODZ.</p>
+                                    <a href="{{ url_for('main.ad_details', ad_id=ad.id) }}" class="btn btn-sm fw-bold px-4" 
+                                       style="background-color: var(--main-accent); color: var(--text-on-accent) !important; border-radius: 8px;">
+                                        ZOBACZ SZCZEGÓŁY
+                                    </a>
+                                </div>
+                            {% else %}
+                                <p class="text-white-50 text-center py-4">Ten użytkownik nie ma obecnie aktywnych ogłoszeń.</p>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .nav-tabs .nav-link.active {
+        background-color: var(--main-accent) !important;
+        color: var(--text-on-accent) !important;
+        transition: all 0.3s ease;
+    }
+    .nav-tabs .nav-link:hover:not(.active) {
+        background-color: rgba(255,255,255,0.2) !important;
+    }
+</style>
+{% endblock %}
