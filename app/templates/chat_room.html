@@ -62,7 +62,6 @@
                     {% endif %}
                 </div>
 
-                <!-- FORMULARZ WYSYŁANIA WIADOMOŚCI (Przekazuje ad_id) -->
                 <form action="{{ url_for('main.send_message', recipient_id=other_user.id) }}" method="POST">
                     <input type="hidden" name="ad_id" value="{{ ad.id if ad else '' }}">
                     <div class="input-group shadow-sm">
