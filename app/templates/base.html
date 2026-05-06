@@ -108,6 +108,31 @@
             color: var(--text-on-accent) !important; 
         }
 
+
+        .custom-clock-container {
+            margin-right: auto;
+            margin-left: 15px;
+            margin-bottom: 28px;
+            padding: 8px 20px;
+            border: 2px dashed var(--main-accent);
+            border-radius: 15px;
+            background-color: var(--bg-color);
+            color: var(--main-accent);
+            font-family: monospace;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .custom-clock-container {
+            box-shadow: 0 0 10px var(--main-accent);
+            background-color: rgba(255, 234, 0, 0.05);
+        }
+
         .msg-icon-svg {
             width: 32px;
             height: 32px;
@@ -212,6 +237,10 @@
             <div class="collapse navbar-collapse" id="navbarContent">
                 <div class="navbar-container-custom">
                     <div class="nav-left">
+                        <div class="custom-clock-container d-none d-lg-flex" id="live-clock">
+                            00:00:00
+                        </div>
+
                         <ul class="navbar-nav">
                             {% if current_user.is_authenticated and current_user.role == 'teacher' %}
                                 <li class="nav-item">
@@ -310,6 +339,22 @@
                 localStorage.setItem('dark-mode', 'disabled');
             }
         });
+
+
+        function updateClock() {
+            const clockElement = document.getElementById('live-clock');
+            if (clockElement) {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                clockElement.innerText = `${hours}:${minutes}:${seconds}`;
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+
     </script>
 </body>
 </html>

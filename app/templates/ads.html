@@ -39,6 +39,7 @@
         {% for ad in ads %}
             <div class="card mb-4 shadow border-0" style="background-color: var(--card-bg) !important; border-radius: 20px; border: 2px solid #343a40 !important;">
                 <div class="card-body p-4">
+                    
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="badge px-3 py-2 fs-6" style="background-color: var(--main-accent) !important; color: var(--text-on-accent) !important; border-radius: 10px;">{{ ad.subject | upper }}</span>
                         <small class="fw-bold" style="color: var(--text-main) !important;">{{ ad.date_posted.strftime('%d.%m.%Y') }}</small>
@@ -56,11 +57,19 @@
                         
                         <div>
                             <span class="form-label fw-bold" style="color: #0b3d91;">DODANE PRZEZ: </span>
-                            <a href="{{ url_for('main.view_profile', username=ad.author.username) }}" class="text-decoration-none fw-bold fs-5 text-white profile-link">
+                            
+                            <a href="{{ url_for('main.view_profile', username=ad.author.username) }}">
+                                <img src="{{ url_for('static', filename='profile_pics/' + ad.author.profile_pic) }}" 
+                                     class="rounded-circle shadow-sm" 
+                                     style="width: 40px; height: 40px; object-fit: cover; border: 2px solid var(--main-accent); transition: transform 0.2s ease;"
+                                     onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                            </a>
+                            
+                            <a href="{{ url_for('main.view_profile', username=ad.author.username) }}" class="text-decoration-none fw-bold text-white profile-link fs-6 ms-2">
                                 {% if ad.author.first_name and ad.author.last_name %}
-                                {{ ad.author.first_name }} {{ ad.author.last_name }}
+                                    {{ ad.author.first_name }} {{ ad.author.last_name }}
                                 {% else %}
-                                 @{{ ad.author.username }}
+                                    @{{ ad.author.username }}
                                 {% endif %}
                             </a>
                         </div>
